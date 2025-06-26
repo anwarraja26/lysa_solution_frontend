@@ -1,0 +1,52 @@
+.container {
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.topBar {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 140px);
+  gap: 32px;
+}
+
+.button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.icon {
+  font-size: 2.5rem;
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 12px;
+  color: white;
+}
+
+.orange {
+  background-color: #f26b3a;
+}
+
+.blue {
+  background-color: #007fff;
+}
+
+span {
+  font-size: 1rem;
+  text-align: center;
+}

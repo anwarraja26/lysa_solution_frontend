@@ -1,0 +1,84 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+  background: #f9fafd;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  max-width: 600px;
+  margin: 0 auto;
+}
+.status {
+  margin-bottom: 12px;
+  font-size: 1.1rem;
+  color: #4a90e2;
+  font-weight: 500;
+}
+.videoGrid {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 18px;
+}
+.videoCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  padding: 16px;
+}
+.video {
+  width: 220px;
+  height: 150px;
+  background: #222;
+  border-radius: 8px;
+  object-fit: cover;
+  margin-bottom: 8px;
+}
+.label {
+  font-size: 0.98rem;
+  color: #888;
+  text-align: center;
+}
+.controls {
+  display: flex;
+  gap: 18px;
+  margin-top: 10px;
+}
+button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  background: #e3e9f0;
+  color: #333;
+  transition: background 0.2s;
+}
+.on {
+  background: #4a90e2;
+  color: #fff;
+}
+.off {
+  background: #e57373;
+  color: #fff;
+}
+.leave {
+  background: #fff;
+  color: #e57373;
+  border: 1px solid #e57373;
+  font-weight: bold;
+}
+@media (max-width: 600px) {
+  .videoGrid {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .video {
+    width: 100vw;
+    max-width: 98vw;
+    height: 160px;
+  }
+}
