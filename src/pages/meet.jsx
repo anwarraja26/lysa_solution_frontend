@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../styles/meet.module.css';
-import Join from '../pages/join';
+import Join from './Join';
 
 export default function Meet() {
   const navigate = useNavigate();

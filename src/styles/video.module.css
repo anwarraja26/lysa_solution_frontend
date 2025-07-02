@@ -9,18 +9,66 @@
   max-width: 600px;
   margin: 0 auto;
 }
-.status {
+
+.statusText {
   margin-bottom: 12px;
   font-size: 1.1rem;
   color: #4a90e2;
   font-weight: 500;
+  text-align: center;
 }
+
+.meta {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.error {
+  color: red;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
 .videoGrid {
   display: flex;
   gap: 24px;
   margin-bottom: 18px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
+
+/* Fullscreen grid layouts */
+.localFullscreenGrid {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  z-index: 9999;
+  margin: 0;
+  gap: 0;
+  flex-wrap: nowrap;
+}
+
+.remoteFullscreenGrid {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  z-index: 9999;
+  margin: 0;
+  gap: 0;
+  flex-wrap: nowrap;
+}
+
 .videoCard {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -29,6 +77,130 @@
   box-shadow: 0 1px 6px rgba(0,0,0,0.06);
   padding: 16px;
 }
+
+/* Fullscreen main video (the one being focused) */
+.maximizedMainVideo {
+position: fixed;
+top: 0;
+left: 0;
+width: 100vw;
+height: calc(100vh - 80px);
+background: #000;
+border-radius: 0;
+box-shadow: none;
+padding: 0;
+z-index: 10000;
+}
+
+.fullscreenMainVideo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  z-index: 10000;
+}
+
+.maximizedMainVideo .video {
+width: 100vw;
+height: calc(100vh - 80px);
+border-radius: 0;
+object-fit: cover;
+margin: 0;
+}
+
+.fullscreenMainVideo .video {
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+  object-fit: cover;
+  margin: 0;
+}
+
+.fullscreenMainVideo .label {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 600;
+  background: rgba(0,0,0,0.5);
+  padding: 8px 12px;
+  border-radius: 6px;
+  z-index: 10001;
+}
+
+.fullscreenMainVideo .fullscreenBtn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(0,0,0,0.5);
+  border-radius: 50%;
+  padding: 12px;
+  z-index: 10001;
+}
+
+/* PIP video (the smaller one in corner during fullscreen) */
+.fullscreenPipVideo {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 280px;
+  height: 200px;
+  background: #000;
+  border-radius: 12px;
+  border: 2px solid #fff;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  padding: 8px;
+  z-index: 10001;
+  transition: all 0.3s ease;
+}
+
+.fullscreenPipVideo:hover {
+  transform: scale(1.05);
+}
+
+.fullscreenPipVideo .video {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+  margin: 0;
+}
+
+.fullscreenPipVideo .label {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background: rgba(0,0,0,0.7);
+  padding: 4px 8px;
+  border-radius: 4px;
+  z-index: 10002;
+}
+
+.fullscreenPipVideo .fullscreenBtn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: white;
+  border-radius: 50%;
+  padding: 8px;
+  z-index: 10002;
+}
+
+.fullscreenPipVideo .fullscreenBtn img {
+  width: 20px;
+  height: 20px;
+  filter: invert(0.7) sepia(1) saturate(5) hue-rotate(180deg); /* Makes dark icons light and visible on white */
+}
+
 .video {
   width: 220px;
   height: 150px;
@@ -37,48 +209,303 @@
   object-fit: cover;
   margin-bottom: 8px;
 }
+
 .label {
   font-size: 0.98rem;
   color: #888;
   text-align: center;
 }
+
 .controls {
   display: flex;
   gap: 18px;
   margin-top: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  /* border-radius: 50px; */
 }
+
+/* Fullscreen controls for local video */
+.fullscreenLocalControls {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 15px;
+  background: rgba(0,0,0,0.8);
+  padding: 15px 25px;
+  border-radius: 50px;
+  z-index: 10001;
+}
+
+/* Fullscreen controls for remote video */
+.fullscreenRemoteControls {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 15px;
+  background: rgba(0,0,0,0.8);
+  padding: 15px 25px;
+  border-radius: 50px;
+  z-index: 10001;
+}
+
+/* Floating leave call button for fullscreen */
+.fullscreenLeaveBtn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: #e57373;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  z-index: 10001;
+  transition: all 0.3s ease;
+}
+
+.fullscreenLeaveBtn:hover {
+  background: #d32f2f;
+  transform: scale(1.05);
+}
+
 button {
   padding: 10px 18px;
   border: none;
-  border-radius: 8px;
+  border-radius: 999px;
   font-size: 1rem;
   cursor: pointer;
   background: #e3e9f0;
   color: #333;
   transition: background 0.2s;
 }
+
+.fullscreenBtn,
+.fullscreenPipVideo .fullscreenBtn,
+.fullscreenLeaveBtn,
+.controls button,
+.fullscreenLocalControls button,
+.fullscreenRemoteControls button {
+  border-radius: 999px !important;
+}
+
 .on {
   background: #4a90e2;
   color: #fff;
 }
+
 .off {
   background: #e57373;
   color: #fff;
 }
+
 .leave {
   background: #fff;
   color: #e57373;
   border: 1px solid #e57373;
   font-weight: bold;
 }
+
+.fullscreenBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+}
+
+.fullscreenBtn img {
+  pointer-events: none;
+}
+
+/* Fullscreen controls button styling */
+.fullscreenLocalControls button,
+.fullscreenRemoteControls button {
+  padding: 12px 20px;
+  border-radius: 25px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  min-width: 120px;
+  border-radius: 50px;
+}
+
+.fullscreenLocalControls .on,
+.fullscreenRemoteControls .on {
+  background: #4a90e2;
+  color: white;
+}
+
+.fullscreenLocalControls .off,
+.fullscreenRemoteControls .off {
+  background: #e57373;
+  color: white;
+}
+/* Add these updated CSS rules to your video.module.css file */
+
+/* Ensure PIP video is always visible and clickable in fullscreen */
+.fullscreenPipVideo {
+position: fixed !important;
+top: 20px !important;
+right: 20px !important;
+width: 280px !important;
+height: 200px !important;
+background: #000 !important;
+border-radius: 12px !important;
+border: 2px solid #fff !important;
+box-shadow: 0 4px 20px rgba(0,0,0,0.3) !important;
+padding: 8px !important;
+z-index: 10001 !important;
+display: block !important; /* Force visibility */
+opacity: 1 !important;
+visibility: visible !important;
+transition: all 0.3s ease !important;
+}
+
+.fullscreenPipVideo:hover {
+transform: scale(1.05) !important;
+border-color: #4a90e2 !important;
+}
+
+.fullscreenPipVideo .video {
+width: 100% !important;
+height: 100% !important;
+border-radius: 8px !important;
+object-fit: cover !important;
+margin: 0 !important;
+display: block !important;
+}
+
+.fullscreenPipVideo .label {
+position: absolute !important;
+bottom: 8px !important;
+left: 8px !important;
+color: white !important;
+font-size: 0.85rem !important;
+font-weight: 500 !important;
+background: rgba(0,0,0,0.7) !important;
+padding: 4px 8px !important;
+border-radius: 4px !important;
+z-index: 10002 !important;
+}
+
+.fullscreenPipVideo .fullscreenBtn {
+position: absolute !important;
+top: 8px !important;
+right: 8px !important;
+background: rgba(255,255,255,0.9) !important;
+border-radius: 50% !important;
+padding: 8px !important;
+z-index: 10002 !important;
+border: none !important;
+cursor: pointer !important;
+}
+
+.fullscreenPipVideo .fullscreenBtn:hover {
+background: white !important;
+transform: scale(1.1) !important;
+}
+
+.fullscreenPipVideo .fullscreenBtn img {
+width: 20px !important;
+height: 20px !important;
+filter: invert(0.7) sepia(1) saturate(5) hue-rotate(180deg) !important;
+}
+
+/* Ensure main fullscreen video doesn't hide PIP */
+.fullscreenMainVideo {
+position: fixed !important;
+top: 0 !important;
+left: 0 !important;
+width: 100vw !important;
+height: 100vh !important;
+background: #000 !important;
+border-radius: 0 !important;
+box-shadow: none !important;
+padding: 0 !important;
+z-index: 10000 !important; /* Lower than PIP */
+}
+
+/* Mobile responsiveness for PIP */
+@media (max-width: 600px) {
+.fullscreenPipVideo {
+  width: 180px !important;
+  height: 130px !important;
+  top: 15px !important;
+  right: 15px !important;
+}
+}
+
+/* Mobile responsiveness */
 @media (max-width: 600px) {
   .videoGrid {
     flex-direction: column;
     gap: 12px;
   }
+
   .video {
     width: 100vw;
     max-width: 98vw;
     height: 160px;
   }
+
+  .fullscreenPipVideo {
+    width: 180px;
+    height: 130px;
+    top: 15px;
+    right: 15px;
+  }
+
+  .fullscreenLocalControls,
+  .fullscreenRemoteControls {
+    bottom: 20px;
+    padding: 12px 20px;
+    gap: 10px;
+  }
+
+  .fullscreenLocalControls button,
+  .fullscreenRemoteControls button {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    min-width: 100px;
+  }
+
+  .fullscreenLeaveBtn {
+    top: 15px;
+    left: 15px;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Animation for smooth transitions */
+.videoCard {
+  transition: all 0.3s ease;
+}
+
+.fullscreenMainVideo .video,
+.fullscreenPipVideo .video {
+  transition: all 0.3s ease;
+}
+
+/* Hide scrollbars in fullscreen */
+.localFullscreenGrid,
+.remoteFullscreenGrid {
+  overflow: hidden;
+}
+
+/* Ensure fullscreen elements are above everything */
+.fullscreenMainVideo,
+.fullscreenPipVideo,
+.fullscreenLocalControls,
+.fullscreenRemoteControls,
+.fullscreenLeaveBtn {
+  z-index: 2147483647; /* Maximum z-index */
 }
