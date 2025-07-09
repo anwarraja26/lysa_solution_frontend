@@ -287,6 +287,145 @@
   font-size: 0.95rem;
 }
 
+/* Metrics Button */
+.metricsButton {
+  background: #4a4a4a;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.metricsButton:hover {
+  background: #5a5a5a;
+}
+
+.metricsButton.active {
+  background: #4a90e2;
+}
+
+/* Metrics Panel */
+.metricsPanel {
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  padding: 16px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 60vh;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.85rem;
+  animation: slideInUp 0.3s ease-out forwards;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.metricsPanel h4 {
+  margin: 0 0 12px 0;
+  color: #4fc3f7;
+  font-size: 1.1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 8px;
+}
+
+.metricsPanel h5 {
+  margin: 0 0 8px 0;
+  color: #4caf50;
+  font-size: 0.95rem;
+}
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.metricGroup {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 12px;
+  border-radius: 6px;
+  border-left: 3px solid #4caf50;
+}
+
+.metricGroup h5 {
+  margin-top: 0;
+  color: #4fc3f7;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+
+.metricsPanel p {
+  margin: 6px 0;
+  color: #e0e0e0;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.metricsPanel p:last-child {
+  margin-bottom: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .metricsPanel {
+    width: 95%;
+    max-height: 50vh;
+  }
+  
+  .metricsGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .metricsButton {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Dark theme for better readability */
+.metricsPanel {
+  scrollbar-width: thin;
+  scrollbar-color: #4a90e2 rgba(255, 255, 255, 0.1);
+}
+
+.metricsPanel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.metricsPanel::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.metricsPanel::-webkit-scrollbar-thumb {
+  background-color: #4a90e2;
+  border-radius: 3px;
+}
+
 /* Video Metrics Styles */
 .videoMetrics {
   position: absolute;

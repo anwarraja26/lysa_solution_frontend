@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import styles from './video.module.css';
 import io from 'socket.io-client';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import fullscreenIcon from '../../assets/fullscreen.png';
 import fullscreenExitIcon from '../../assets/fullscreen-exit.png';
+import VideoMetrics from '../../utils/videoMetrics';
 
 // -----------------------------------------------------------------------------
 // Helper utilities
@@ -59,6 +60,8 @@ const Video = () => {
   const peerConnectionsRef = useRef({});
   const remoteVideosRef = useRef({});
   const timerRef = useRef(null);
+  const metricsRef = useRef(null);
+  const metricsIntervalRef = useRef(null);
 
   const { meetingId } = useParams();
   const [searchParams] = useSearchParams();
@@ -76,6 +79,8 @@ const Video = () => {
   const [remoteFullscreen, setRemoteFullscreen] = useState(false);
   const [showParticipants, setShowParticipants] = useState(false);
   const [showLeaveDropdown, setShowLeaveDropdown] = useState(false);
+  const [showMetrics, setShowMetrics] = useState(false);
+  const [currentMetrics, setCurrentMetrics] = useState(null);
 
   const [joined, setJoined] = useState(false);
   const [localStream, setLocalStream] = useState(null);
@@ -172,6 +177,40 @@ const Video = () => {
     return () => document.removeEventListener('fullscreenchange', updateFullscreen);
   }, []);
 
+  // Initialize metrics collection
+  const initMetrics = useCallback(() => {
+    if (!socketRef.current) return;
+    
+    // Generate a unique ID for this user if not exists
+    const userId = localStorage.getItem('userId') || `user-${Math.random().toString(36).substr(2, 9)}`;
+    localStorage.setItem('userId', userId);
+    
+    // Initialize metrics collector
+    metricsRef.current = new VideoMetrics(socketRef.current, userId);
+    
+    // Start metrics collection
+    metricsRef.current.start(5000); // Collect metrics every 5 seconds
+    
+    // Periodically update metrics state for UI
+    metricsIntervalRef.current = setInterval(() => {
+      if (metricsRef.current) {
+        setCurrentMetrics({
+          ...metricsRef.current.metrics,
+          timestamp: new Date().toISOString()
+        });
+      }
+    }, 2000);
+    
+    return () => {
+      if (metricsIntervalRef.current) {
+        clearInterval(metricsIntervalRef.current);
+      }
+      if (metricsRef.current) {
+        metricsRef.current.stop();
+      }
+    };
+  }, []);
+
   // ---------------------------------------------------------------------------
   // Boot‑strap socket connection + global error handlers
   // ---------------------------------------------------------------------------
@@ -189,6 +228,9 @@ const Video = () => {
 
     socketRef.current = io('http://localhost:5001');
     // socketRef.current = io('https://lysasolution-backend.onrender.com');
+    
+    // Initialize metrics when socket is ready
+    initMetrics();
 
     socketRef.current.on('connect', () => setStatus('Connected to server'));
     socketRef.current.on('disconnect', () => setStatus('Disconnected from server'));
@@ -981,6 +1023,12 @@ const Video = () => {
           <button onClick={toggleParticipants} className={styles.participantsControlBtn}>
             People ({participants.length})
           </button>
+          <button 
+            onClick={() => setShowMetrics(!showMetrics)} 
+            className={`${styles.metricsButton} ${showMetrics ? styles.active : ''}`}
+          >
+            Metrics
+          </button>
           <div className={styles.leaveDropdown}>
             <button 
               onClick={() => setShowLeaveDropdown(!showLeaveDropdown)} 
@@ -1010,6 +1058,36 @@ const Video = () => {
               </div>
             )}
           </div>
+          
+          {/* Metrics Panel */}
+          {showMetrics && currentMetrics && (
+            <div className={styles.metricsPanel}>
+              <h4>Connection Metrics</h4>
+              <div className={styles.metricsGrid}>
+                <div className={styles.metricGroup}>
+                  <h5>Network</h5>
+                  <p>Latency: {currentMetrics.network.latency}ms</p>
+                  <p>Jitter: {currentMetrics.network.jitter}ms</p>
+                  <p>Packet Loss: {currentMetrics.network.packetLoss?.toFixed(2)}%</p>
+                  <p>Bitrate: {currentMetrics.network.bitrate?.video || 0}kbps (video)</p>
+                  <p>{currentMetrics.network.bitrate?.audio || 0}kbps (audio)</p>
+                </div>
+                <div className={styles.metricGroup}>
+                  <h5>Video</h5>
+                  <p>Resolution: {currentMetrics.video.resolution?.width}x{currentMetrics.video.resolution?.height}</p>
+                  <p>Frame Rate: {currentMetrics.video.frameRate || 0}fps</p>
+                  <p>Delay: {currentMetrics.video.delay}ms</p>
+                  <p>Freezes: {currentMetrics.video.freezes?.count || 0} ({(currentMetrics.video.freezes?.duration / 1000 || 0).toFixed(1)}s)</p>
+                </div>
+                <div className={styles.metricGroup}>
+                  <h5>Audio</h5>
+                  <p>Latency: {currentMetrics.audio.latency}ms</p>
+                  <p>Drops: {currentMetrics.audio.drops?.count || 0} ({(currentMetrics.audio.drops?.duration / 1000 || 0).toFixed(1)}s)</p>
+                  <p>Quality: {currentMetrics.audio.mos?.toFixed(1) || 'N/A'}/5.0 MOS</p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
